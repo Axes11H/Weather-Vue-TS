@@ -1,0 +1,76 @@
+*{
+  font-family: "Fredoka", sans-serif;
+  color: white;
+}
+
+.body{
+  height: 120vh;
+}
+
+.app{
+  max-width: 300px;
+  height: 700px;
+  flex: 1;
+}
+
+.main-temp{
+  font-size: 128px;
+  font-weight: 900;
+}
+
+.fs-12{
+  font-size: 12px;
+}
+
+.gradient-cloud {
+  position: relative;
+  background: linear-gradient(0deg, #A4DFFF 0%, #628699 100%);
+  z-index: 1;
+}
+
+.gradient-night {
+  position: relative;
+  background: linear-gradient(0deg, #010530 0%, #021196 100%);
+  z-index: 1;
+}
+
+.gradient-thunder {
+  position: relative;
+  background: linear-gradient(0deg, #7747FF 0%, #14004E 100%);
+  z-index: 1;
+}
+
+.gradient-rain {
+  position: relative;
+  background: linear-gradient(0deg, #93D9FF 0%, #A1BECE 100%);
+  z-index: 1;
+}
+
+.gradient-wind {
+  position: relative;
+  background: linear-gradient(0deg, #055BC0 0%, #557AA5 100%);
+  z-index: 1;
+}
+
+.gradient-sun {
+  position: relative;
+  background: linear-gradient(0deg, #47BEFF 0%, #A3DBFA 100%);
+  z-index: 1;
+}
+
+.gradient-cloudly::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, #b5e1f9 0%, #7296a9 100%);
+  z-index: -1;
+  transition: opacity 0.5s linear;
+  opacity: 0;
+}
+
+.gradient:hover::before {
+  opacity: 1;
+}
