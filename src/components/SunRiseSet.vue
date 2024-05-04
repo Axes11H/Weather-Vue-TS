@@ -16,8 +16,8 @@
    import { defineProps } from 'vue';
 
    interface ISunRiseSetProps{
-      rise: number,
-      set: number
+      rise: string,
+      set: string
    }
 
    const props = defineProps<ISunRiseSetProps>();

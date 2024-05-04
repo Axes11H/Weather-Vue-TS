@@ -2,23 +2,23 @@
    <div class="glass-bg">
       <div class="d-flex align-items-center justify-content-between">
          <span>Feels Like</span>
-         <span>{{ props.feelLike }}</span>
+         <span>{{ props.feelLike }}°</span>
       </div>
       <div class="d-flex align-items-center justify-content-between">
          <span>Wind speed</span>
-         <span>{{ props.wSpeed }}</span>
+         <span>{{ props.wSpeed }} Mph</span>
       </div>
       <div class="d-flex align-items-center justify-content-between">
          <span>Humidity</span>
-         <span>{{ props.humidity }}</span>
+         <span>{{ props.humidity }}%</span>
       </div>
       <div class="d-flex align-items-center justify-content-between">
          <span>Pressure</span>
-         <span>{{ props.pressure }}</span>
+         <span>{{ props.pressure }} Pa</span>
       </div>
       <div class="d-flex align-items-center justify-content-between">
          <span>Visibility</span>
-         <span>{{ props.visibility }}</span>
+         <span>{{ props.visibility }} m</span>
       </div>
    </div>
 </template>

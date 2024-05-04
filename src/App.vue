@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  // #TODO
+  // Fix all errors in console
+
   import { ref, onMounted } from 'vue';
   import SearchInput from './components/UI/SearchInput.vue';
   import Header from './components/Header.vue';
@@ -34,15 +37,32 @@
     }
   }
 
+  interface IRestructData{
+    name: string,
+    temp: number,
+    min: number,
+    max: number,
+    main: string,
+    time: number,
+    sunRise: string,
+    sunSet: string,
+    wind: number,
+    pressure: number,
+    humidity: number,
+    feelLike: number,
+    visibility: number
+  }
+
   // Variebls
 
   const cityCord = ref<any | null>(null);
   const weatherData = ref<IWeatherData | null>(null);
-  let restructureData = ref<any | null>(null);
+  let restructureData = ref<IRestructData | null>(null);
 
   let cityFromInput = ref<string>("New York");
   let load = ref<boolean>(false);
-  let wrongCity = ref<boolean>(false)
+  let wrongCity = ref<boolean>(false);
+  let hoursVal = ref<number>(0)
   
   // Helping Functions
 
@@ -55,13 +75,16 @@
             load.value = false;
           }
         )
-      }
+    }else{
+      getCityApi(cityFromInput.value)
+    }
   }
 
   function msToTime(ms: number) {
     const minutes = Math.floor((ms / (1000 * 60)) % 60);
     const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-    
+    hoursVal.value = hours;
+
     return `${hours}:${minutes}`
   }
 
@@ -73,7 +96,7 @@
         min: calvinToCelsius(weatherData.value.main.temp_min),
         max: calvinToCelsius(weatherData.value.main.temp_max),
         main: weatherData.value.weather[0].main,
-        time: weatherData.value.dt,
+        time: hoursVal.value,
         sunRise: msToTime(weatherData.value.sys.sunrise),
         sunSet: msToTime(weatherData.value.sys.sunset),
         wind: weatherData.value.wind.speed,
@@ -115,7 +138,6 @@
         const weatherDataResponse = await getWeather(lat, lon);
         weatherData.value = weatherDataResponse;
         restructureDataFunc();
-        console.log(weatherDataResponse)
       }
       load.value = false;
       wrongCity.value = false;
@@ -133,46 +155,46 @@
   onMounted(() => {
     checkGeo();
   })
-
-  getCityApi(cityFromInput.value)
 </script>
 
-<template>  
-  <div 
-    class="body d-flex align-items-center justify-content-center" 
+<template>
+  <div
+    class="body d-flex justify-content-center"
     :class="{
-      'gradient-cloud': restructureData.main === 'Clouds', 
-      'gradient-rain': restructureData.main === 'Rain',
-      'gradient-sun': restructureData.main === 'Clear',
+      'gradient-cloud': restructureData && restructureData.main === 'Clouds',
+      'gradient-night': restructureData && restructureData.time === 0,
+      'gradient-rain': restructureData && restructureData.main === 'Rain',
+      'gradient-sun': restructureData && restructureData.main === 'Clear',
     }"
   >
-    <div class="app d-flex flex-column">
+    <div class="app d-flex flex-column mt-3">
       <div class="d-flex align-items-top">
         <SearchInput @updateCity="updateCity" class=""/>
       </div>
-      <div  v-if="load === true" class="app d-flex flex-column align-items-center justify-content-center">
+      <div v-if="load" class="app d-flex flex-column align-items-center justify-content-center">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
         <span v-if="wrongCity">Wrong city</span>
       </div>
-      <div v-if="load === false" class="d-flex flex-column align-items-center">
-        <Header 
+      <div v-else class="d-flex flex-column align-items-center">
+        <Header v-if="restructureData"
           :city="restructureData.name" 
           :temp="restructureData.temp" 
           :min="restructureData.min" 
           :max="restructureData.max" 
           :desc="restructureData.main" 
         />
-        <WeatherIcons 
+        <WeatherIcons v-if="restructureData"
           class="mt-3"
           :type="restructureData.main"
+          :time="restructureData.time"
         />
-        <SunRiseSet 
+        <SunRiseSet v-if="restructureData"
           :rise="restructureData.sunRise" 
           :set="restructureData.sunSet"
         />
-        <MoreInfWeather 
+        <MoreInfWeather v-if="restructureData"
           class="mt-2" 
           :feelLike="restructureData.feelLike"
           :wSpeed="restructureData.wind"
@@ -184,6 +206,3 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>
