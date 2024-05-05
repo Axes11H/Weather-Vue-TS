@@ -10,49 +10,11 @@ import MoreInfWeather from './components/MoreInfWeather.vue';
 import { getCity } from './api/getCity';
 import { getWeather } from './api/getWeather';
 
-interface IWeatherData {
-  name: string;
-  dt: number;
-  visibility: number;
-  timezone: number;
-  main: {
-    feels_like: number;
-    humidity: number;
-    pressure: number;
-    temp: number;
-    temp_min: number;
-    temp_max: number;
-  };
-  sys: {
-    sunrise: number;
-    sunset: number;
-  };
-  weather: {
-    main: string;
-  }[];
-  wind: {
-    speed: number;
-  };
-}
-
-interface IRestructData {
-  name: string;
-  temp: number;
-  min: number;
-  max: number;
-  main: string;
-  time: string | undefined;
-  sunRise: string;
-  sunSet: string;
-  wind: number;
-  pressure: number;
-  humidity: number;
-  feelLike: number;
-  visibility: number;
-}
+// Interfaces
+import type { IWeatherData } from './interfaces/IWeatherData'
+import type { IRestructData } from './interfaces/IRestructData'
 
 // Variables
-
 const cityCord = ref<any | null>(null);
 const weatherData = ref<IWeatherData | null>(null);
 let restructureData = ref<IRestructData | null>(null);
@@ -63,7 +25,6 @@ let wrongCity = ref<boolean>(false);
 let localTime: string | undefined;
 
 // Helper Functions
-
 async function checkGeo() {
   if ("permissions" in navigator && "geolocation" in navigator) {
     const permission = await navigator.permissions.query({ name: 'geolocation' });
@@ -151,7 +112,9 @@ async function getWeatherApi(lon: number, lat: number) {
     if (lon && lat) {
       const weatherDataResponse = await getWeather(lat, lon);
       weatherData.value = weatherDataResponse;
-      localTime = getLocalTime(weatherData.value.timezone, Date.now());
+      if (weatherData.value !== null) {
+        localTime = getLocalTime(weatherData.value.timezone, Date.now());
+      }
       restructureDataFunc();
     }
     load.value = false;
